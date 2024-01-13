@@ -1,4 +1,5 @@
 import sys
+import os
 
 # See if the filename has been provided as a command line argument and set the file variable otherwise set the file variable to the default file
 if len(sys.argv) > 1:
@@ -20,6 +21,7 @@ def extract_csv(bytesio):
         tmp_file_name = tmp_file.name
 
     file = ifcopenshell.open(tmp_file_name)
+    filename_without_extension, _ = os.path.splitext(bytesio.name)
 
     def get_objects_data_by_class(file, class_type):
         def add_pset_attributes(psets):
@@ -29,7 +31,7 @@ def extract_csv(bytesio):
 
         def append_attribute_data(object, attribute, value):
             objects_data.append({
-                "Model Name": file_name_no_ext,
+                "Model Name": filename_without_extension,
                 "Express ID": object.id(),
                 "Field Name": attribute,
                 "Field Value": value
@@ -59,12 +61,4 @@ def extract_csv(bytesio):
     import pandas as pd
     dataframe = pd.DataFrame.from_records(data)
 
-    import io
-
-    csv_buffer = io.StringIO()
-    dataframe.to_csv(csv_buffer, index=False)
-    csv_string = csv_buffer.getvalue()
-
-    return csv_string
-
-# 
+    return dataframe
