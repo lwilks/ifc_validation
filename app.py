@@ -21,7 +21,6 @@ if uploaded_file is not None and output_format:
         towrite = io.BytesIO()
         with pd.ExcelWriter(towrite, engine='openpyxl') as writer:
             for object_class in data["Class"].unique():
-                print(data)
                 df_class = data[data["Class"] == object_class]
                 df_class = df_class.dropna(axis=1, how='all')
                 df_class.to_excel(writer, sheet_name=object_class, index=False)
